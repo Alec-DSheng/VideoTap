@@ -27,4 +27,6 @@ public class ZlMediaApiProperties {
     private String secret;
 
     private String customizedPath;
+
+    private String sipUrl;
 }

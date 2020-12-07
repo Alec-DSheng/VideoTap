@@ -15,4 +15,5 @@ public interface DeviceService {
     Mono<PageInfo<Device>> searchPage(Integer pageNo, Integer pageSize);
 
     void registerDevice(Device device);
+
 }

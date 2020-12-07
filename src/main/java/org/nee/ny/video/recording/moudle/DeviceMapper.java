@@ -2,6 +2,7 @@ package org.nee.ny.video.recording.moudle;
 
 import org.apache.ibatis.annotations.*;
 import org.nee.ny.video.recording.domain.Device;
+import org.nee.ny.video.recording.domain.DeviceChannel;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,8 @@ public interface DeviceMapper {
     @Update("update t_device set host=#{device.host},name=#{device.name},channel_num=#{device.channelNum},status=1," +
             "model=#{device.model}, firmware=#{device.firmware}, domain=#{device.domain} where code =#{device.code}")
     void updateDynamic(@Param("device") Device device);
+
+
+    @Select("select * from temp_video")
+    List<DeviceChannel> select();
 }

@@ -47,4 +47,10 @@ public class DeviceChannel {
     private String  faceIcon;
 
     private Integer cloudRecording;
+
+    private Integer safetyWay;
+
+    private Integer parental;
+
+    private String parentId;
 }

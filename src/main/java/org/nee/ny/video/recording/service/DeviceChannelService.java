@@ -15,7 +15,7 @@ public interface DeviceChannelService {
 
     Mono searchPage(DeviceChannel deviceChannel, Integer pageNo, Integer pageSize);
 
-    void reportChannel(DeviceChannel deviceChannel);
+    void reportChannel(DeviceChannel deviceChannel, Integer sum);
 
     Mono<List<DeviceChannelTreeResponse>> treeNodes();
 }

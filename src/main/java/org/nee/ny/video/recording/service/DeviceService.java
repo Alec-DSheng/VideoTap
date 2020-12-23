@@ -16,4 +16,6 @@ public interface DeviceService {
 
     void registerDevice(Device device);
 
+    void deviceLineStatus(String deviceId, Integer status);
+
 }

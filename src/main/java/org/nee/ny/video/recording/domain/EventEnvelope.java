@@ -1,7 +1,6 @@
 package org.nee.ny.video.recording.domain;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.EqualsAndHashCode;
+import org.nee.ny.video.recording.utils.BeanToMapUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -23,6 +22,12 @@ public class EventEnvelope implements Serializable {
     private Date createTime;
 
     private Map<String, Object> payload;
+
+
+    public Object getEventPayload(Object obj) {
+        BeanToMapUtil.mapToBean(payload, obj);
+        return obj;
+    }
 
 
     public String getEventId() {

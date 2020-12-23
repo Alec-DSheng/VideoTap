@@ -23,15 +23,18 @@ public interface DeviceMapper {
     Optional<Device> searchDeviceByCode(@Param("code") String code);
 
     @Insert("insert into t_device (code, name, host,port,transport,channel_num,model," +
-            "firmware, domain ) values (#{device.code},#{device.name},#{device.host},#{device.port},#{device.transport}," +
-            "#{device.channelNum},#{device.model},#{device.firmware},#{device.domain})")
+            "firmware, domain, status ) values (#{device.code},#{device.name},#{device.host},#{device.port},#{device.transport}," +
+            "#{device.channelNum},#{device.model},#{device.firmware},#{device.domain},#{device.status})")
     void insert(@Param("device") Device device);
 
     @Update("update t_device set host=#{device.host},name=#{device.name},channel_num=#{device.channelNum},status=1," +
-            "model=#{device.model}, firmware=#{device.firmware}, domain=#{device.domain} where code =#{device.code}")
+            "model=#{device.model}, firmware=#{device.firmware}, domain=#{device.domain}, status = #{device.status} where code =#{device.code}")
     void updateDynamic(@Param("device") Device device);
 
 
-    @Select("select * from temp_video")
-    List<DeviceChannel> select();
+    @Update("update t_device set status = #{status} where id = #{id}")
+    void updateStatus(@Param(value = "status") Integer status, @Param(value = "id") Integer id);
+
+    @Update("update t_device set channel_num = #{channelNum} where code = #{code}")
+    void updateChannelNum(@Param("channelNum") Integer channelNum, @Param("code") String code);
 }

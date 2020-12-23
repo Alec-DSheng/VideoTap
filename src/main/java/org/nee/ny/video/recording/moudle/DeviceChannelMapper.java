@@ -40,14 +40,16 @@ public interface DeviceChannelMapper {
     Optional<DeviceChannel> searchDeviceChannelByCode(@Param("code") String code);
 
     @Insert("insert into t_device_channel (code, name, device_id,manufacturer,model,address,register_way,secret,status," +
-            "owner, civil_code ) values (#{channel.code},#{channel.name},#{channel.deviceId},#{channel.manufacturer}," +
-            "#{channel.model},#{channel.address},#{channel.registerWay},#{channel.secret}," +
-            "#{channel.status},#{channel.owner},#{channel.civilCode})")
+            "owner, civil_code, no, parent_id, parental, safety_way ) values (#{channel.code},#{channel.name}," +
+            "#{channel.deviceId},#{channel.manufacturer},#{channel.model}," +
+            "#{channel.address},#{channel.registerWay},#{channel.secret},#{channel.status},#{channel.owner}," +
+            "#{channel.civilCode},#{channel.no},#{channel.parentId},#{channel.parental},#{channel.safetyWay})")
     void insert(@Param("channel") DeviceChannel channel);
 
     @Update("update t_device_channel set name=#{channel.name},manufacturer=#{channel.manufacturer},status=#{channel.status}," +
             "model=#{channel.model}, address=#{channel.address}, register_way=#{channel.registerWay},secret=#{channel.secret}," +
-            "owner=#{channel.owner},civil_code=#{channel.civilCode} where code =#{channel.code}")
+            "owner=#{channel.owner},civil_code=#{channel.civilCode}, no= #{channel.no},parent_id = #{channel.parentId}," +
+            "parental = #{channel.parental}, safety_way =#{channel.safetyWay}  where code =#{channel.code}")
     void updateDynamic(@Param("channel") DeviceChannel channel);
 
     @Select("<script>" +
@@ -57,5 +59,9 @@ public interface DeviceChannelMapper {
             " </when> " +
             " </script>")
     List<DeviceChannel> searchList(@Param("channel") DeviceChannel channel);
+
+
+    @Update("update t_device_channel set status = #{status} where device_id = #{deviceId}")
+    void updateStatusByDevice(@Param(value = "status") Integer status, @Param(value = "deviceId") String deviceId);
 
 }

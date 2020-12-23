@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,12 +34,13 @@ public class DeviceChannelServiceImpl implements DeviceChannelService {
 
     private final DeviceChannelMapper deviceChannelMapper;
 
-    @Autowired
-    private DeviceMapper deviceMapper;
+    private final DeviceMapper deviceMapper;
 
-    public DeviceChannelServiceImpl(VideoRecordingMapper videoRecordingMapper, DeviceChannelMapper deviceChannelMapper) {
+    public DeviceChannelServiceImpl(VideoRecordingMapper videoRecordingMapper, DeviceChannelMapper deviceChannelMapper,
+                                    DeviceMapper deviceMapper) {
         this.videoRecordingMapper = videoRecordingMapper;
         this.deviceChannelMapper = deviceChannelMapper;
+        this.deviceMapper = deviceMapper;
     }
 
     @Override
@@ -51,17 +51,19 @@ public class DeviceChannelServiceImpl implements DeviceChannelService {
     }
 
     @Override
-    public void reportChannel(DeviceChannel deviceChannel) {
-        log.info("channel {}", deviceChannel);
+    public void reportChannel(DeviceChannel deviceChannel, Integer channelNum) {
+        log.info("channel {} ------- {}", deviceChannel, channelNum);
         Optional<DeviceChannel> channel = deviceChannelMapper.searchDeviceChannelByCode(deviceChannel.getCode());
         if (channel.isPresent()) {
             deviceChannelMapper.updateDynamic(deviceChannel);
             return;
         }
-        int start = deviceChannel.getCode().length() - 4;
-        deviceChannel.setNo(deviceChannel.getCode().substring(start));
         deviceChannelMapper.insert(deviceChannel);
+        if (channelNum != null) {
+            deviceMapper.updateChannelNum(channelNum, deviceChannel.getDeviceId());
+        }
     }
+
 
     @Override
     public Mono<List<DeviceChannelTreeResponse>> treeNodes() {

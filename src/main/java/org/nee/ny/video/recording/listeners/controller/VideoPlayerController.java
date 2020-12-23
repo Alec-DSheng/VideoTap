@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * @Author: alec
- * Description: 执行视频播放
+ * Description: 视频播放
  * @date: 16:59 2020-12-05
  */
 @RestController
@@ -24,14 +24,12 @@ public class VideoPlayerController {
     @GetMapping(value = "start")
     public Mono<VideoPlayerResponse> start(@RequestParam(value = "deviceId") String deviceId,
                                            @RequestParam(value = "channelId")String channelId) {
-
         return Mono.just(videoPlayerService.startPlayer(deviceId, channelId));
     }
 
     @GetMapping(value = "stop")
     public Mono<VideoPlayerResponse> stop(@RequestParam(value = "deviceId") String deviceId,
                                            @RequestParam(value = "channelId")String channelId) {
-
         return Mono.just(videoPlayerService.stopPlayer(deviceId, channelId));
     }
 }

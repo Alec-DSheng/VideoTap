@@ -1,17 +1,17 @@
 package org.nee.ny.video.recording.listeners.consumer;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.nee.ny.video.recording.domain.Device;
 import org.nee.ny.video.recording.domain.EventEnvelope;
-import org.nee.ny.video.recording.domain.consumer.DeviceRegisterEvent;
+import org.nee.ny.video.recording.domain.enums.StatusEnum;
 import org.nee.ny.video.recording.service.DeviceService;
 import org.nee.ny.video.recording.utils.BeanToMapUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import static org.nee.ny.video.recording.domain.Constants.*;
 
@@ -24,8 +24,13 @@ import static org.nee.ny.video.recording.domain.Constants.*;
 @Slf4j
 public class DeviceListeners {
 
-    @Autowired
-    private DeviceService deviceService;
+    private static final String KEY_DEVICE_LINE = "deviceId";
+
+    private final DeviceService deviceService;
+
+    public DeviceListeners(DeviceService deviceService) {
+        this.deviceService = deviceService;
+    }
 
     /**
      * 监听设备注册
@@ -36,20 +41,27 @@ public class DeviceListeners {
       Device device = new Device();
       deviceService.registerDevice(BeanToMapUtil.mapToBean(payloadMap, device));
     }
-
     /**
      * 监听设备上线
      * */
     @KafkaListener(topics = TOPIC_DEVICE_ONLINE)
-    public void deviceOnline() {
-
+    public void deviceOnline(EventEnvelope eventEnvelope) {
+        dealDeviceOnlineOrOffLine(eventEnvelope.getPayload(), StatusEnum.ENABLE.getCode());
     }
-
     /**
      * 监听设备下线
      * */
     @KafkaListener(topics = TOPIC_DEVICE_OFFLINE)
-    public void deviceOffline() {
-
+    public void deviceOffline(EventEnvelope eventEnvelope) {
+        dealDeviceOnlineOrOffLine(eventEnvelope.getPayload(), StatusEnum.DISABLED.getCode());
     }
+
+    private void dealDeviceOnlineOrOffLine(Map<String, Object> payloadMap, Integer status) {
+        Optional.ofNullable(payloadMap).ifPresent(payload -> {
+            String deviceId = Objects.requireNonNull(payloadMap.get(KEY_DEVICE_LINE)).toString();
+            log.info("处理设备 {} 上下线， 当前设备 {}", deviceId, status);
+            deviceService.deviceLineStatus(deviceId, status);
+        });
+    }
+
 }

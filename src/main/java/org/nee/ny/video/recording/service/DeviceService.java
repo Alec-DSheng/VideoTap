@@ -14,6 +14,8 @@ public interface DeviceService {
     //查询设备列表
     Mono<PageInfo<Device>> searchPage(Integer pageNo, Integer pageSize);
 
+    void loadChannel(String deviceId);
+
     void registerDevice(Device device);
 
     void deviceLineStatus(String deviceId, Integer status);

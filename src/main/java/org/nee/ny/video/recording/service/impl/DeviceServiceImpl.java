@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.nee.ny.video.recording.domain.Device;
 import org.nee.ny.video.recording.domain.enums.StatusEnum;
+import org.nee.ny.video.recording.exception.ParamsErrorException;
 import org.nee.ny.video.recording.moudle.DeviceChannelMapper;
 import org.nee.ny.video.recording.moudle.DeviceMapper;
 import org.nee.ny.video.recording.service.DeviceService;
@@ -37,6 +38,16 @@ public class DeviceServiceImpl implements DeviceService {
         PageHelper.startPage(pageNo, pageSize);
         List<Device> deviceList = deviceMapper.searchList();
         return Mono.just(new PageInfo<>(deviceList));
+    }
+
+    @Override
+    public void loadChannel(String deviceId) {
+        deviceMapper.searchDeviceByCode(deviceId).ifPresent(device -> {
+            if (!device.getStatus().equals(StatusEnum.ENABLE.getCode())) {
+                throw new ParamsErrorException("设备不在线");
+            }
+            //发起restTemp 请求
+        });
     }
 
     @Override

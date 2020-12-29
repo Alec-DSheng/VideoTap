@@ -46,6 +46,7 @@ public class DeviceListeners {
      * */
     @KafkaListener(topics = TOPIC_DEVICE_ONLINE)
     public void deviceOnline(EventEnvelope eventEnvelope) {
+        log.info("设备上线 {}", StatusEnum.ENABLE.getCode());
         dealDeviceOnlineOrOffLine(eventEnvelope.getPayload(), StatusEnum.ENABLE.getCode());
     }
     /**
@@ -53,13 +54,13 @@ public class DeviceListeners {
      * */
     @KafkaListener(topics = TOPIC_DEVICE_OFFLINE)
     public void deviceOffline(EventEnvelope eventEnvelope) {
+        log.info("设备下线 {}", StatusEnum.DISABLED.getCode());
         dealDeviceOnlineOrOffLine(eventEnvelope.getPayload(), StatusEnum.DISABLED.getCode());
     }
 
     private void dealDeviceOnlineOrOffLine(Map<String, Object> payloadMap, Integer status) {
         Optional.ofNullable(payloadMap).ifPresent(payload -> {
             String deviceId = Objects.requireNonNull(payloadMap.get(KEY_DEVICE_LINE)).toString();
-            log.info("处理设备 {} 上下线， 当前设备 {}", deviceId, status);
             deviceService.deviceLineStatus(deviceId, status);
         });
     }

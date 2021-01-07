@@ -3,7 +3,6 @@ package org.nee.ny.video.recording.service;
 import org.nee.ny.video.recording.configuration.ZlMediaApiProperties;
 import org.nee.ny.video.recording.domain.api.ZlMediaRequest;
 import org.nee.ny.video.recording.domain.webhook.StreamNoneReaderRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +25,11 @@ public class ZlMediaRequestBuilderImpl implements ZlMediaRequestBuilder {
 
     private final static String CLOSE_STREAM = "/index/api/close_streams";
 
-    @Autowired
-    private ZlMediaApiProperties zlMediaApiProperties;
+    private final ZlMediaApiProperties zlMediaApiProperties;
+
+    public ZlMediaRequestBuilderImpl(ZlMediaApiProperties zlMediaApiProperties) {
+        this.zlMediaApiProperties = zlMediaApiProperties;
+    }
 
     @Override
     public RequestEntity<ZlMediaRequest> startRecordingVideo(String scrCode, Integer type) {

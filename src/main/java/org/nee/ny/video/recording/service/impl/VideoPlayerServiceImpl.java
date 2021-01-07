@@ -35,7 +35,8 @@ public class VideoPlayerServiceImpl implements VideoPlayerService {
     @Autowired
     private ZlMediaApiProperties zlMediaApiProperties;
 
-    public VideoPlayerServiceImpl(DeviceMapper deviceMapper, DeviceChannelMapper deviceChannelMapper, RestTemplate restTemplate) {
+    public VideoPlayerServiceImpl(DeviceMapper deviceMapper, DeviceChannelMapper deviceChannelMapper,
+                                  RestTemplate restTemplate) {
         this.deviceMapper = deviceMapper;
         this.deviceChannelMapper = deviceChannelMapper;
         this.restTemplate = restTemplate;
